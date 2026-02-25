@@ -416,10 +416,10 @@ cursor: not-allowed;
 /* GAME OVER / WIN */
 #result-screen {
 width: 100%;
-border: 2px solid var(–green);
+border: 2px solid #00ff41;
 padding: 20px;
 text-align: center;
-background: var(–darker-green);
+background: #0a2a12;
 display: none;
 flex-direction: column;
 align-items: center;
@@ -428,7 +428,7 @@ margin-bottom: 10px;
 }
 
 #result-screen.show { display: flex; }
-#result-screen.defeat { border-color: var(–red); }
+#result-screen.defeat { border-color: #ff5555; }
 
 #result-title {
 font-family: ‘Press Start 2P’, monospace;
@@ -436,21 +436,21 @@ font-size: 14px;
 line-height: 1.8;
 }
 
-#result-title.victory { color: var(–yellow); text-shadow: 0 0 12px var(–yellow); }
-#result-title.defeat { color: var(–red); text-shadow: 0 0 12px var(–red); }
+#result-title.victory { color: #ffff00; text-shadow: 0 0 12px #ffff00; }
+#result-title.defeat  { color: #ff5555; text-shadow: 0 0 12px #ff5555; }
 
 #result-message {
-font-size: 11px;
-line-height: 1.8;
-color: var(–green);
+font-size: 12px;
+line-height: 1.9;
+color: #00ff41;
 }
 
 #scorecard-text {
 font-size: 12px;
-line-height: 1.8;
-color: var(–green);
-background: var(–dark-green);
-border: 1px solid var(–dim-green);
+line-height: 1.9;
+color: #00ff41;
+background: #030f06;
+border: 1px solid #00cc33;
 padding: 12px;
 width: 100%;
 text-align: left;
@@ -459,21 +459,22 @@ word-break: break-word;
 }
 
 #copy-btn {
-padding: 10px 20px;
+padding: 12px 24px;
 background: transparent;
-border: 1px solid var(–cyan);
-color: var(–cyan);
+border: 2px solid #00ffff;
+color: #00ffff;
 font-family: ‘Share Tech Mono’, monospace;
-font-size: 11px;
+font-size: 12px;
 cursor: pointer;
 letter-spacing: 2px;
 transition: all 0.15s;
 outline: none;
+-webkit-appearance: none;
 }
 
 #copy-btn:hover {
-background: rgba(0,255,255,0.1);
-box-shadow: 0 0 8px rgba(0,255,255,0.4);
+background: rgba(0,255,255,0.15);
+box-shadow: 0 0 10px rgba(0,255,255,0.5);
 }
 
 /* Animations */
@@ -948,12 +949,12 @@ function endGame(victory) {
     resultScreen.classList.remove('defeat');
     resultTitle.className = 'victory';
     resultTitle.textContent = 'VICTORY!';
-    resultMessage.innerHTML = `You defeated <span style="color:var(--yellow)">${state.goblin.name}</span>!<br>HP remaining: <span style="color:var(--green)">${state.playerHp}/${PLAYER_MAX_HP}</span>`;
+    resultMessage.innerHTML = `You defeated <span style="color:#ffff00">${state.goblin.name}</span>!<br>HP remaining: <span style="color:#00ff41">${state.playerHp}/${PLAYER_MAX_HP}</span>`;
   } else {
     resultScreen.classList.add('defeat');
     resultTitle.className = 'defeat';
     resultTitle.textContent = 'DEFEATED...';
-    resultMessage.innerHTML = `<span style="color:var(--yellow)">${state.goblin.name}</span> has bested you.<br>Goblin HP remaining: <span style="color:var(--red)">${state.goblin.hp}/${GOBLIN_MAX_HP}</span>`;
+    resultMessage.innerHTML = `<span style="color:#ffff00">${state.goblin.name}</span> has bested you.<br>Goblin HP remaining: <span style="color:#ff5555">${state.goblin.hp}/${GOBLIN_MAX_HP}</span>`;
   }
 
   const scorecard = buildScorecard(victory);
@@ -1004,12 +1005,12 @@ function showSavedResult(saved) {
   if (saved.victory) {
     resultTitle.className = 'victory';
     resultTitle.textContent = 'VICTORY!';
-    resultMessage.innerHTML = `You defeated <span style="color:var(--yellow)">${saved.goblinName}</span>!<br>HP remaining: <span style="color:var(--green)">${saved.playerHp}/${PLAYER_MAX_HP}</span>`;
+    resultMessage.innerHTML = `You defeated <span style="color:#ffff00">${saved.goblinName}</span>!<br>HP remaining: <span style="color:#00ff41">${saved.playerHp}/${PLAYER_MAX_HP}</span>`;
   } else {
     resultScreen.classList.add('defeat');
     resultTitle.className = 'defeat';
     resultTitle.textContent = 'DEFEATED...';
-    resultMessage.innerHTML = `<span style="color:var(--yellow)">${saved.goblinName}</span> bested you.<br>Goblin HP remaining: <span style="color:var(--red)">${saved.goblinHp}/${GOBLIN_MAX_HP}</span>`;
+    resultMessage.innerHTML = `<span style="color:#ffff00">${saved.goblinName}</span> bested you.<br>Goblin HP remaining: <span style="color:#ff5555">${saved.goblinHp}/${GOBLIN_MAX_HP}</span>`;
   }
   scorecardText.textContent = saved.scorecard;
 }
