@@ -10,19 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
 
-:root {
-–green: #00ff41;
-–dim-green: #00bb30;
-–dark-green: #003b10;
-–darker-green: #001a08;
-–black: #000000;
-–red: #ff3333;
-–yellow: #ffff00;
-–cyan: #00ffff;
-–orange: #ff8800;
-–purple: #cc44ff;
-–bg: #030f06;
-}
+/* all colors hardcoded below - no CSS variables to avoid mobile rendering issues */
 
 - { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -31,8 +19,8 @@ background: #030f06;
 }
 
 body {
-background: var(–bg);
-color: var(–green);
+background: #030f06;
+color: #00ff41;
 font-family: ‘Share Tech Mono’, monospace;
 min-height: 100vh;
 display: flex;
@@ -80,15 +68,15 @@ align-items: center;
 width: 100%;
 text-align: center;
 padding: 18px 0 8px;
-border-bottom: 1px solid var(–dim-green);
+border-bottom: 1px solid #00cc33;
 margin-bottom: 12px;
 }
 
 #title {
 font-family: ‘Press Start 2P’, monospace;
 font-size: 22px;
-color: var(–green);
-text-shadow: 0 0 10px var(–green), 0 0 20px var(–green);
+color: #00ff41;
+text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41;
 letter-spacing: 4px;
 }
 
@@ -102,10 +90,10 @@ letter-spacing: 2px;
 /* GOBLIN CARD */
 #goblin-card {
 width: 100%;
-border: 1px solid var(–dim-green);
+border: 1px solid #00cc33;
 padding: 12px;
 margin-bottom: 10px;
-background: var(–darker-green);
+background: #001a08;
 position: relative;
 }
 
@@ -124,8 +112,8 @@ letter-spacing: 2px;
 #goblin-name {
 font-family: ‘Press Start 2P’, monospace;
 font-size: 13px;
-color: var(–yellow);
-text-shadow: 0 0 8px var(–yellow);
+color: #ffff00;
+text-shadow: 0 0 8px #ffff00;
 text-align: center;
 margin-bottom: 10px;
 line-height: 1.6;
@@ -166,8 +154,8 @@ flex-shrink: 0;
 .hp-bar {
 flex: 1;
 height: 12px;
-background: var(–dark-green);
-border: 1px solid var(–dim-green);
+background: #0a2a12;
+border: 1px solid #00cc33;
 position: relative;
 overflow: hidden;
 }
@@ -178,8 +166,8 @@ transition: width 0.4s ease;
 position: relative;
 }
 
-.hp-fill.player { background: var(–green); }
-.hp-fill.goblin { background: var(–red); }
+.hp-fill.player { background: #00ff41; }
+.hp-fill.goblin { background: #ff5555; }
 
 .hp-fill::after {
 content: ‘’;
@@ -201,15 +189,15 @@ font-size: 11px;
 flex-shrink: 0;
 }
 
-.hp-number.player { color: var(–green); }
-.hp-number.goblin { color: var(–red); }
+.hp-number.player { color: #00ff41; }
+.hp-number.goblin { color: #ff5555; }
 
 /* BATTLE LOG */
 #battle-log-container {
 width: 100%;
-border: 1px solid var(–dim-green);
+border: 1px solid #00cc33;
 margin-bottom: 10px;
-background: var(–darker-green);
+background: #001a08;
 position: relative;
 }
 
@@ -264,10 +252,10 @@ text-align: center;
 /* ATTACK PANEL */
 #attack-panel {
 width: 100%;
-border: 1px solid var(–dim-green);
+border: 1px solid #00cc33;
 padding: 12px;
 margin-bottom: 10px;
-background: var(–darker-green);
+background: #001a08;
 position: relative;
 }
 
@@ -358,30 +346,31 @@ color: inherit;
 width: 100%;
 padding: 14px;
 background: transparent;
-border: 2px solid var(–green);
-color: var(–green);
+border: 2px solid #00ff41;
+color: #00ff41;
 font-family: ‘Press Start 2P’, monospace;
 font-size: 13px;
 cursor: pointer;
 letter-spacing: 3px;
-text-shadow: 0 0 8px var(–green);
+text-shadow: 0 0 8px #00ff41;
 box-shadow: 0 0 8px rgba(0,255,65,0.2);
 transition: all 0.15s;
 outline: none;
 -webkit-tap-highlight-color: transparent;
+-webkit-appearance: none;
 }
 
 #strike-btn:hover:not(:disabled) {
-background: var(–green);
-color: var(–black);
-box-shadow: 0 0 20px var(–green);
+background: #00ff41;
+color: #000000;
+box-shadow: 0 0 20px #00ff41;
 }
 
 #strike-btn:disabled {
 opacity: 0.3;
 cursor: not-allowed;
-border-color: #333;
-color: #333;
+border-color: #225522;
+color: #225522;
 box-shadow: none;
 text-shadow: none;
 }
@@ -391,8 +380,8 @@ text-shadow: none;
 width: 100%;
 padding: 10px;
 background: transparent;
-border: 1px solid var(–purple);
-color: var(–purple);
+border: 1px solid #cc44ff;
+color: #cc44ff;
 font-family: ‘Share Tech Mono’, monospace;
 font-size: 11px;
 cursor: pointer;
@@ -401,6 +390,7 @@ margin-top: 8px;
 transition: all 0.15s;
 outline: none;
 -webkit-tap-highlight-color: transparent;
+-webkit-appearance: none;
 }
 
 #crystal-ball-btn:hover:not(:disabled) {
