@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SLAYDLE</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Press+Start+2P&display=swap');
+
+:root {
+–green: #00ff41;
+–dim-green: #00bb30;
+–dark-green: #003b10;
+–darker-green: #001a08;
+–black: #000000;
+–red: #ff3333;
+–yellow: #ffff00;
+–cyan: #00ffff;
+–orange: #ff8800;
+–purple: #cc44ff;
+–bg: #030f06;
+}
+
+- { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+background: var(–bg);
+color: var(–green);
+font-family: ‘Share Tech Mono’, monospace;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+overflow-x: hidden;
+}
+
+/* Scanline overlay */
+body::before {
+content: ‘’;
+position: fixed;
+top: 0; left: 0; right: 0; bottom: 0;
+background: repeating-linear-gradient(
+0deg,
+transparent,
+transparent 2px,
+rgba(0,0,0,0.08) 2px,
+rgba(0,0,0,0.08) 4px
+);
+pointer-events: none;
+z-index: 999;
+}
+
+/* CRT flicker */
+@keyframes flicker {
+0%, 100% { opacity: 1; }
+92% { opacity: 1; }
+93% { opacity: 0.97; }
+94% { opacity: 1; }
+}
+body { animation: flicker 8s infinite; }
+
+#app {
+width: 100%;
+max-width: 480px;
+padding: 0 12px 80px;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+/* HEADER */
+#header {
+width: 100%;
+text-align: center;
+padding: 18px 0 8px;
+border-bottom: 1px solid var(–dim-green);
+margin-bottom: 12px;
+}
+
+#title {
+font-family: ‘Press Start 2P’, monospace;
+font-size: 22px;
+color: var(–green);
+text-shadow: 0 0 10px var(–green), 0 0 20px var(–green);
+letter-spacing: 4px;
+}
+
+#subtitle {
+font-size: 10px;
+color: var(–dim-green);
+margin-top: 4px;
+letter-spacing: 2px;
+}
+
+/* GOBLIN CARD */
+#goblin-card {
+width: 100%;
+border: 1px solid var(–dim-green);
+padding: 12px;
+margin-bottom: 10px;
+background: var(–darker-green);
+position: relative;
+}
+
+#goblin-card::before {
+content: ‘[ ENEMY ]’;
+position: absolute;
+top: -9px;
+left: 10px;
+background: var(–bg);
+padding: 0 6px;
+font-size: 10px;
+color: var(–dim-green);
+letter-spacing: 2px;
+}
+
+#goblin-name {
+font-family: ‘Press Start 2P’, monospace;
+font-size: 13px;
+color: var(–yellow);
+text-shadow: 0 0 8px var(–yellow);
+text-align: center;
+margin-bottom: 10px;
+line-height: 1.6;
+}
+
+.ascii-goblin {
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 11px;
+line-height: 1.4;
+color: var(–dim-green);
+text-align: center;
+white-space: pre;
+margin-bottom: 10px;
+}
+
+/* HP BARS */
+.hp-section {
+display: flex;
+flex-direction: column;
+gap: 6px;
+width: 100%;
+}
+
+.hp-row {
+display: flex;
+align-items: center;
+gap: 8px;
+font-size: 11px;
+}
+
+.hp-label {
+width: 70px;
+color: var(–dim-green);
+letter-spacing: 1px;
+flex-shrink: 0;
+}
+
+.hp-bar {
+flex: 1;
+height: 12px;
+background: var(–dark-green);
+border: 1px solid var(–dim-green);
+position: relative;
+overflow: hidden;
+}
+
+.hp-fill {
+height: 100%;
+transition: width 0.4s ease;
+position: relative;
+}
+
+.hp-fill.player { background: var(–green); }
+.hp-fill.goblin { background: var(–red); }
+
+.hp-fill::after {
+content: ‘’;
+position: absolute;
+top: 0; left: 0; right: 0; bottom: 0;
+background: repeating-linear-gradient(
+90deg,
+transparent,
+transparent 6px,
+rgba(0,0,0,0.2) 6px,
+rgba(0,0,0,0.2) 7px
+);
+}
+
+.hp-number {
+width: 36px;
+text-align: right;
+font-size: 11px;
+flex-shrink: 0;
+}
+
+.hp-number.player { color: var(–green); }
+.hp-number.goblin { color: var(–red); }
+
+/* BATTLE LOG */
+#battle-log-container {
+width: 100%;
+border: 1px solid var(–dim-green);
+margin-bottom: 10px;
+background: var(–darker-green);
+position: relative;
+}
+
+#battle-log-container::before {
+content: ‘[ BATTLE LOG ]’;
+position: absolute;
+top: -9px;
+left: 10px;
+background: var(–bg);
+padding: 0 6px;
+font-size: 10px;
+color: var(–dim-green);
+letter-spacing: 2px;
+}
+
+#battle-log {
+max-height: 220px;
+overflow-y: auto;
+padding: 14px 10px 8px;
+font-size: 11px;
+line-height: 1.7;
+scroll-behavior: smooth;
+}
+
+#battle-log::-webkit-scrollbar { width: 4px; }
+#battle-log::-webkit-scrollbar-track { background: var(–darker-green); }
+#battle-log::-webkit-scrollbar-thumb { background: var(–dim-green); }
+
+.log-entry { margin-bottom: 8px; }
+
+.log-turn {
+color: var(–dim-green);
+font-size: 10px;
+letter-spacing: 1px;
+}
+
+.log-attack { color: var(–cyan); }
+.log-very-effective { color: var(–yellow); text-shadow: 0 0 6px var(–yellow); }
+.log-effective { color: var(–green); }
+.log-ineffective { color: #444; }
+.log-goblin-hit { color: var(–red); }
+.log-hint { color: var(–purple); }
+.log-system { color: var(–dim-green); font-style: italic; }
+
+.log-empty {
+color: #333;
+font-size: 11px;
+padding: 8px 0;
+text-align: center;
+}
+
+/* ATTACK PANEL */
+#attack-panel {
+width: 100%;
+border: 1px solid var(–dim-green);
+padding: 12px;
+margin-bottom: 10px;
+background: var(–darker-green);
+position: relative;
+}
+
+#attack-panel::before {
+content: ‘[ ATTACK ]’;
+position: absolute;
+top: -9px;
+left: 10px;
+background: var(–bg);
+padding: 0 6px;
+font-size: 10px;
+color: var(–dim-green);
+letter-spacing: 2px;
+}
+
+.attack-group {
+margin-bottom: 12px;
+}
+
+.attack-group-label {
+font-size: 10px;
+color: var(–dim-green);
+letter-spacing: 2px;
+margin-bottom: 8px;
+}
+
+.attack-options {
+display: flex;
+gap: 6px;
+flex-wrap: wrap;
+}
+
+.attack-btn {
+flex: 1;
+min-width: 70px;
+padding: 8px 4px;
+background: var(–dark-green);
+border: 1px solid var(–dim-green);
+color: var(–green);
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 11px;
+cursor: pointer;
+text-align: center;
+letter-spacing: 1px;
+transition: all 0.1s;
+position: relative;
+outline: none;
+-webkit-tap-highlight-color: transparent;
+}
+
+.attack-btn:hover {
+background: var(–dark-green);
+border-color: var(–green);
+color: var(–green);
+}
+
+.attack-btn.selected {
+background: var(–green);
+color: var(–black);
+border-color: var(–green);
+box-shadow: 0 0 8px var(–green);
+}
+
+.attack-btn .btn-icon {
+display: block;
+font-size: 16px;
+margin-bottom: 3px;
+}
+
+.attack-btn .btn-label {
+display: block;
+font-size: 9px;
+letter-spacing: 1px;
+}
+
+/* Element colors when selected */
+.attack-btn.selected.fire { background: var(–orange); border-color: var(–orange); box-shadow: 0 0 8px var(–orange); }
+.attack-btn.selected.ice { background: var(–cyan); border-color: var(–cyan); box-shadow: 0 0 8px var(–cyan); color: #000; }
+.attack-btn.selected.electric { background: var(–yellow); border-color: var(–yellow); box-shadow: 0 0 8px var(–yellow); color: #000; }
+.attack-btn.selected.physical { background: #aaa; border-color: #aaa; box-shadow: 0 0 8px #aaa; color: #000; }
+
+/* STRIKE button */
+#strike-btn {
+width: 100%;
+padding: 14px;
+background: transparent;
+border: 2px solid var(–green);
+color: var(–green);
+font-family: ‘Press Start 2P’, monospace;
+font-size: 13px;
+cursor: pointer;
+letter-spacing: 3px;
+text-shadow: 0 0 8px var(–green);
+box-shadow: 0 0 8px rgba(0,255,65,0.2);
+transition: all 0.15s;
+outline: none;
+-webkit-tap-highlight-color: transparent;
+}
+
+#strike-btn:hover:not(:disabled) {
+background: var(–green);
+color: var(–black);
+box-shadow: 0 0 20px var(–green);
+}
+
+#strike-btn:disabled {
+opacity: 0.3;
+cursor: not-allowed;
+border-color: #333;
+color: #333;
+box-shadow: none;
+text-shadow: none;
+}
+
+/* CRYSTAL BALL */
+#crystal-ball-btn {
+width: 100%;
+padding: 10px;
+background: transparent;
+border: 1px solid var(–purple);
+color: var(–purple);
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 11px;
+cursor: pointer;
+letter-spacing: 2px;
+margin-top: 8px;
+transition: all 0.15s;
+outline: none;
+-webkit-tap-highlight-color: transparent;
+}
+
+#crystal-ball-btn:hover:not(:disabled) {
+background: rgba(204, 68, 255, 0.15);
+box-shadow: 0 0 10px rgba(204, 68, 255, 0.4);
+}
+
+#crystal-ball-btn:disabled {
+opacity: 0.25;
+cursor: not-allowed;
+}
+
+/* GAME OVER / WIN */
+#result-screen {
+width: 100%;
+border: 2px solid var(–green);
+padding: 20px;
+text-align: center;
+background: var(–darker-green);
+display: none;
+flex-direction: column;
+align-items: center;
+gap: 12px;
+margin-bottom: 10px;
+}
+
+#result-screen.show { display: flex; }
+#result-screen.defeat { border-color: var(–red); }
+
+#result-title {
+font-family: ‘Press Start 2P’, monospace;
+font-size: 14px;
+line-height: 1.8;
+}
+
+#result-title.victory { color: var(–yellow); text-shadow: 0 0 12px var(–yellow); }
+#result-title.defeat { color: var(–red); text-shadow: 0 0 12px var(–red); }
+
+#result-message {
+font-size: 11px;
+line-height: 1.8;
+color: var(–green);
+}
+
+#scorecard-text {
+font-size: 12px;
+line-height: 1.8;
+color: var(–green);
+background: var(–dark-green);
+border: 1px solid var(–dim-green);
+padding: 12px;
+width: 100%;
+text-align: left;
+white-space: pre-wrap;
+word-break: break-word;
+}
+
+#copy-btn {
+padding: 10px 20px;
+background: transparent;
+border: 1px solid var(–cyan);
+color: var(–cyan);
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 11px;
+cursor: pointer;
+letter-spacing: 2px;
+transition: all 0.15s;
+outline: none;
+}
+
+#copy-btn:hover {
+background: rgba(0,255,255,0.1);
+box-shadow: 0 0 8px rgba(0,255,255,0.4);
+}
+
+/* Animations */
+@keyframes shake {
+0%, 100% { transform: translateX(0); }
+20% { transform: translateX(-4px); }
+40% { transform: translateX(4px); }
+60% { transform: translateX(-4px); }
+80% { transform: translateX(4px); }
+}
+
+@keyframes pulse-green {
+0%, 100% { text-shadow: 0 0 8px var(–green); }
+50% { text-shadow: 0 0 20px var(–green), 0 0 40px var(–green); }
+}
+
+@keyframes typewriter {
+from { opacity: 0; transform: translateY(4px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.log-entry { animation: typewriter 0.2s ease forwards; }
+
+.shake { animation: shake 0.4s ease; }
+
+#date-display {
+font-size: 9px;
+color: #225522;
+letter-spacing: 2px;
+margin-top: 4px;
+}
+</style>
+
+</head>
+<body>
+<div id="app">
+
+  <div id="header">
+    <div id="title">SLAYDLE</div>
+    <div id="subtitle">DAILY GOBLIN BATTLE</div>
+    <div id="date-display" id="date-display"></div>
+  </div>
+
+  <div id="goblin-card">
+    <div id="goblin-name">???</div>
+    <div class="ascii-goblin" id="goblin-art">
+    .-"-.
+   /  ,  \
+  | (o)(o)|
+  |  \__/ |
+   \ /\/\ /
+    |    |
+   /|    |\
+  /_|____|_\</div>
+    <div class="hp-section">
+      <div class="hp-row">
+        <span class="hp-label">GOBLIN HP</span>
+        <div class="hp-bar"><div class="hp-fill goblin" id="goblin-hp-bar" style="width:100%"></div></div>
+        <span class="hp-number goblin" id="goblin-hp-num">3/3</span>
+      </div>
+      <div class="hp-row">
+        <span class="hp-label">YOUR HP</span>
+        <div class="hp-bar"><div class="hp-fill player" id="player-hp-bar" style="width:100%"></div></div>
+        <span class="hp-number player" id="player-hp-num">5/5</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="battle-log-container">
+    <div id="battle-log">
+      <div class="log-empty">[ Awaiting your move, adventurer... ]</div>
+    </div>
+  </div>
+
+  <div id="attack-panel">
+    <div class="attack-group">
+      <div class="attack-group-label">WEAPON</div>
+      <div class="attack-options" id="weapon-options">
+        <button class="attack-btn" data-type="weapon" data-value="bow">
+          <span class="btn-icon">🏹</span>
+          <span class="btn-label">BOW</span>
+        </button>
+        <button class="attack-btn" data-type="weapon" data-value="sword">
+          <span class="btn-icon">⚔️</span>
+          <span class="btn-label">SWORD</span>
+        </button>
+        <button class="attack-btn" data-type="weapon" data-value="club">
+          <span class="btn-icon">🪓</span>
+          <span class="btn-label">CLUB</span>
+        </button>
+      </div>
+    </div>
+    <div class="attack-group">
+      <div class="attack-group-label">ELEMENT</div>
+      <div class="attack-options" id="element-options">
+        <button class="attack-btn fire" data-type="element" data-value="fire">
+          <span class="btn-icon">🔥</span>
+          <span class="btn-label">FIRE</span>
+        </button>
+        <button class="attack-btn ice" data-type="element" data-value="ice">
+          <span class="btn-icon">❄️</span>
+          <span class="btn-label">ICE</span>
+        </button>
+        <button class="attack-btn electric" data-type="element" data-value="electric">
+          <span class="btn-icon">⚡</span>
+          <span class="btn-label">ELECTRIC</span>
+        </button>
+        <button class="attack-btn physical" data-type="element" data-value="physical">
+          <span class="btn-icon">💪</span>
+          <span class="btn-label">PHYSICAL</span>
+        </button>
+      </div>
+    </div>
+    <button id="strike-btn" disabled>⚔ STRIKE ⚔</button>
+    <button id="crystal-ball-btn">🔮 CONSULT CRYSTAL BALL (costs 1 HP)</button>
+  </div>
+
+  <div id="result-screen">
+    <div id="result-title"></div>
+    <div id="result-message"></div>
+    <div id="scorecard-text"></div>
+    <button id="copy-btn">📋 COPY SCORECARD</button>
+  </div>
+
+</div>
+
+<script>
+// =====================
+// GAME DATA
+// =====================
+
+const WEAPONS = ['bow', 'sword', 'club'];
+const ELEMENTS = ['fire', 'ice', 'electric', 'physical'];
+
+const GOBLIN_FIRST_NAMES = [
+  'Glorbo','Fleebo','Snurk','Grix','Moog','Zibble','Krunt','Wobble',
+  'Snot','Grubble','Fizz','Dork','Splot','Wumph','Gurgle','Blig',
+  'Plonk','Snivel','Twerp','Grob','Muzzy','Flub','Skronk','Vex',
+  'Zorp','Quibble','Snaggle','Droob','Chuntle','Flib'
+];
+
+// Adjectives that hint at weakness
+const HINT_ADJECTIVES = {
+  // Weapon hints
+  bow:    ['cowardly','skittish','distant','fleeing','dodgy','nimble'],
+  sword:  ['armored','shielded','defensive','guarded','plated','scaly'],
+  club:   ['bony','hollow','brittle','fragile','cracked','spindly'],
+  // Element hints
+  fire:   ['flammable','frosty','icy','frozen','chilly','wintry'],  // fire beats ice-themed (ironic) -- actually fire beats fire-weak
+  ice:    ['sweating','feverish','volcanic','scorching','ashen','smoldering'],
+  electric:['rubbery','grounded','static','sparking','twitching','magnetic'],
+  physical:['squishy','doughy','pudgy','bloated','mushy','gelatinous'],
+};
+
+// Flavor-only adjectives (no hint)
+const FLAVOR_ADJECTIVES = [
+  'stinky','smelly','grumpy','sulky','whiny','rude','nasty','soggy',
+  'crusty','gloomy','ornery','dim','dopey','surly','greasy','mangy',
+  'scruffy','ratty','lumpy','frumpy'
+];
+
+// =====================
+// SEEDED RNG
+// =====================
+
+function seededRng(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    return (s >>> 0) / 0xffffffff;
+  };
+}
+
+function getDateSeed() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth() + 1;
+  const d = now.getDate();
+  return y * 10000 + m * 100 + d;
+}
+
+function pick(arr, rng) {
+  return arr[Math.floor(rng() * arr.length)];
+}
+
+// =====================
+// GOBLIN GENERATION
+// =====================
+
+function generateGoblin(seed) {
+  const rng = seededRng(seed);
+
+  const firstName = pick(GOBLIN_FIRST_NAMES, rng);
+  const weakWeapon = pick(WEAPONS, rng);
+  const weakElement = pick(ELEMENTS, rng);
+
+  // Decide if adjective hints at weakness (60% chance one axis hints)
+  const hintRoll = rng();
+  let adjective;
+  if (hintRoll < 0.3) {
+    // Hint at weapon weakness
+    adjective = pick(HINT_ADJECTIVES[weakWeapon], rng);
+  } else if (hintRoll < 0.6) {
+    // Hint at element weakness
+    adjective = pick(HINT_ADJECTIVES[weakElement], rng);
+  } else {
+    // Pure flavor
+    adjective = pick(FLAVOR_ADJECTIVES, rng);
+  }
+
+  // Capitalize
+  const name = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+  const adj = adjective.charAt(0).toUpperCase() + adjective.slice(1);
+
+  return {
+    name: `${name} the ${adj}`,
+    weakWeapon,
+    weakElement,
+    maxHp: 3,
+    hp: 3
+  };
+}
+
+// =====================
+// GAME STATE
+// =====================
+
+const PLAYER_MAX_HP = 5;
+const GOBLIN_MAX_HP = 3;
+
+const DAMAGE = {
+  veryEffective: 2,
+  effective: 1,
+  ineffective: 0
+};
+
+let state = {
+  goblin: null,
+  playerHp: PLAYER_MAX_HP,
+  turn: 0,
+  selectedWeapon: null,
+  selectedElement: null,
+  crystalUsed: false,
+  gameOver: false,
+  victory: false,
+  log: [],
+  attackLog: [] // for scorecard
+};
+
+// =====================
+// DAILY LOCK (localStorage)
+// =====================
+
+const SAVE_KEY = 'slaydle_v1_' + getDateSeed();
+
+function loadSave() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return null;
+}
+
+function saveSave(data) {
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+  } catch(e) {}
+}
+
+// =====================
+// UI HELPERS
+// =====================
+
+function formatDate() {
+  const now = new Date();
+  return now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+
+function updateHpBars() {
+  const goblinPct = Math.max(0, state.goblin.hp / GOBLIN_MAX_HP * 100);
+  const playerPct = Math.max(0, state.playerHp / PLAYER_MAX_HP * 100);
+  document.getElementById('goblin-hp-bar').style.width = goblinPct + '%';
+  document.getElementById('player-hp-bar').style.width = playerPct + '%';
+  document.getElementById('goblin-hp-num').textContent = `${Math.max(0,state.goblin.hp)}/${GOBLIN_MAX_HP}`;
+  document.getElementById('player-hp-num').textContent = `${Math.max(0,state.playerHp)}/${PLAYER_MAX_HP}`;
+}
+
+function addLog(html, classes='') {
+  const log = document.getElementById('battle-log');
+  // Remove empty placeholder
+  const empty = log.querySelector('.log-empty');
+  if (empty) empty.remove();
+
+  const div = document.createElement('div');
+  div.className = 'log-entry ' + classes;
+  div.innerHTML = html;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+function updateStrikeBtn() {
+  const btn = document.getElementById('strike-btn');
+  btn.disabled = !state.selectedWeapon || !state.selectedElement || state.gameOver;
+}
+
+// =====================
+// COMBAT LOGIC
+// =====================
+
+function getEffectiveness(weapon, element) {
+  const weaponHit = weapon === state.goblin.weakWeapon;
+  const elementHit = element === state.goblin.weakElement;
+  if (weaponHit && elementHit) return 'veryEffective';
+  if (weaponHit || elementHit) return 'effective';
+  return 'ineffective';
+}
+
+function doAttack() {
+  if (state.gameOver) return;
+  const weapon = state.selectedWeapon;
+  const element = state.selectedElement;
+  state.turn++;
+
+  const effectiveness = getEffectiveness(weapon, element);
+  const dmg = DAMAGE[effectiveness];
+  state.goblin.hp -= dmg;
+
+  // Log attack
+  const weaponEmoji = {bow:'🏹',sword:'⚔️',club:'🪓'}[weapon];
+  const elementEmoji = {fire:'🔥',ice:'❄️',electric:'⚡',physical:'💪'}[element];
+
+  addLog(`<span class="log-turn">TURN ${state.turn} ></span> <span class="log-attack">${weaponEmoji} ${weapon.toUpperCase()} + ${elementEmoji} ${element.toUpperCase()}</span>`);
+
+  if (effectiveness === 'veryEffective') {
+    addLog(`<span class="log-very-effective">*** VERY EFFECTIVE! (-${dmg} HP) ***</span>`);
+  } else if (effectiveness === 'effective') {
+    addLog(`<span class="log-effective">~ Effective. (-${dmg} HP)</span>`);
+  } else {
+    addLog(`<span class="log-ineffective">... Ineffective. (0 damage)</span>`);
+  }
+
+  state.attackLog.push({ weapon, element, effectiveness });
+  updateHpBars();
+
+  // Check goblin defeat
+  if (state.goblin.hp <= 0) {
+    state.goblin.hp = 0;
+    updateHpBars();
+    endGame(true);
+    return;
+  }
+
+  // Goblin counter-attack
+  const goblinDmg = state.turn - 1; // turn 1 = 0 dmg, turn 2 = 1 dmg, etc.
+  state.playerHp -= goblinDmg;
+
+  if (goblinDmg === 0) {
+    addLog(`<span class="log-goblin-hit">${state.goblin.name.split(' ')[0]} snarls but hesitates!</span>`);
+  } else {
+    addLog(`<span class="log-goblin-hit">${state.goblin.name.split(' ')[0]} strikes back! (-${goblinDmg} HP)</span>`);
+  }
+
+  updateHpBars();
+
+  // Check player defeat
+  if (state.playerHp <= 0) {
+    state.playerHp = 0;
+    updateHpBars();
+    endGame(false);
+    return;
+  }
+
+  // Reset selections
+  state.selectedWeapon = null;
+  state.selectedElement = null;
+  document.querySelectorAll('.attack-btn.selected').forEach(b => b.classList.remove('selected'));
+  updateStrikeBtn();
+}
+
+// =====================
+// CRYSTAL BALL
+// =====================
+
+function consultCrystalBall() {
+  if (state.crystalUsed || state.gameOver) return;
+  state.crystalUsed = true;
+
+  // Cost: 1 HP
+  state.playerHp = Math.max(0, state.playerHp - 1);
+  updateHpBars();
+
+  // Pick two random wrong options to reveal as ineffective
+  // Pool: all weapons + all elements except the correct ones
+  const wrongPool = [];
+  WEAPONS.forEach(w => { if (w !== state.goblin.weakWeapon) wrongPool.push({type:'weapon', val:w}); });
+  ELEMENTS.forEach(e => { if (e !== state.goblin.weakElement) wrongPool.push({type:'element', val:e}); });
+
+  // Shuffle and pick 2
+  for (let i = wrongPool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [wrongPool[i], wrongPool[j]] = [wrongPool[j], wrongPool[i]];
+  }
+  const revealed = wrongPool.slice(0, 2);
+  const desc = revealed.map(r => `${r.val.toUpperCase()}`).join(' and ');
+
+  addLog(`<span class="log-hint">🔮 The crystal ball shimmers... "${desc} seem ineffective against this foe."</span>`);
+  addLog(`<span class="log-goblin-hit">${state.goblin.name.split(' ')[0]} senses weakness and strikes! (-1 HP)</span>`);
+
+  document.getElementById('crystal-ball-btn').disabled = true;
+
+  if (state.playerHp <= 0) {
+    endGame(false);
+  }
+}
+
+// =====================
+// END GAME
+// =====================
+
+function buildScorecard(victory) {
+  const date = formatDate();
+  const effectivenessEmoji = {
+    veryEffective: '💥',
+    effective: '✅',
+    ineffective: '❌'
+  };
+
+  let card = `SLAYDLE — ${date}\n`;
+  card += `${state.goblin.name}\n\n`;
+
+  if (victory) {
+    card += `⚔️ VICTORY! HP remaining: ${state.playerHp}/${PLAYER_MAX_HP}\n`;
+  } else {
+    card += `💀 DEFEAT! Goblin HP remaining: ${state.goblin.hp}/${GOBLIN_MAX_HP}\n`;
+  }
+
+  card += '\n';
+  state.attackLog.forEach((atk, i) => {
+    card += `Turn ${i+1}: ${effectivenessEmoji[atk.effectiveness]}\n`;
+  });
+
+  card += '\nPlay at: slaydle.github.io';
+  return card;
+}
+
+function endGame(victory) {
+  state.gameOver = true;
+  state.victory = victory;
+
+  // Disable attack panel
+  document.querySelectorAll('.attack-btn, #strike-btn, #crystal-ball-btn').forEach(b => b.disabled = true);
+
+  const resultScreen = document.getElementById('result-screen');
+  const resultTitle = document.getElementById('result-title');
+  const resultMessage = document.getElementById('result-message');
+  const scorecardText = document.getElementById('scorecard-text');
+
+  resultScreen.classList.add('show');
+
+  if (victory) {
+    resultScreen.classList.remove('defeat');
+    resultTitle.className = 'victory';
+    resultTitle.textContent = 'VICTORY!';
+    resultMessage.innerHTML = `You defeated <span style="color:var(--yellow)">${state.goblin.name}</span>!<br>HP remaining: <span style="color:var(--green)">${state.playerHp}/${PLAYER_MAX_HP}</span>`;
+  } else {
+    resultScreen.classList.add('defeat');
+    resultTitle.className = 'defeat';
+    resultTitle.textContent = 'DEFEATED...';
+    resultMessage.innerHTML = `<span style="color:var(--yellow)">${state.goblin.name}</span> has bested you.<br>Goblin HP remaining: <span style="color:var(--red)">${state.goblin.hp}/${GOBLIN_MAX_HP}</span>`;
+  }
+
+  const scorecard = buildScorecard(victory);
+  scorecardText.textContent = scorecard;
+
+  // Save to localStorage
+  saveSave({
+    gameOver: true,
+    victory,
+    playerHp: state.playerHp,
+    goblinHp: state.goblin.hp,
+    goblinName: state.goblin.name,
+    attackLog: state.attackLog,
+    scorecard
+  });
+}
+
+// =====================
+// SHOW PREVIOUS RESULT
+// =====================
+
+function showSavedResult(saved) {
+  document.getElementById('goblin-name').textContent = saved.goblinName;
+
+  // Rebuild state enough for display
+  state.goblin = generateGoblin(getDateSeed());
+  state.goblin.hp = saved.goblinHp;
+  state.playerHp = saved.playerHp;
+  state.gameOver = true;
+  state.attackLog = saved.attackLog || [];
+
+  updateHpBars();
+
+  addLog(`<span class="log-system">[ You already played today. ]</span>`);
+  saved.attackLog && saved.attackLog.forEach((atk, i) => {
+    const effectivenessEmoji = {veryEffective:'💥',effective:'✅',ineffective:'❌'};
+    addLog(`Turn ${i+1}: ${atk.weapon.toUpperCase()} + ${atk.element.toUpperCase()} — ${effectivenessEmoji[atk.effectiveness]}`);
+  });
+
+  document.querySelectorAll('.attack-btn, #strike-btn, #crystal-ball-btn').forEach(b => b.disabled = true);
+
+  const resultScreen = document.getElementById('result-screen');
+  const resultTitle = document.getElementById('result-title');
+  const resultMessage = document.getElementById('result-message');
+  const scorecardText = document.getElementById('scorecard-text');
+
+  resultScreen.classList.add('show');
+  if (saved.victory) {
+    resultTitle.className = 'victory';
+    resultTitle.textContent = 'VICTORY!';
+    resultMessage.innerHTML = `You defeated <span style="color:var(--yellow)">${saved.goblinName}</span>!<br>HP remaining: <span style="color:var(--green)">${saved.playerHp}/${PLAYER_MAX_HP}</span>`;
+  } else {
+    resultScreen.classList.add('defeat');
+    resultTitle.className = 'defeat';
+    resultTitle.textContent = 'DEFEATED...';
+    resultMessage.innerHTML = `<span style="color:var(--yellow)">${saved.goblinName}</span> bested you.<br>Goblin HP remaining: <span style="color:var(--red)">${saved.goblinHp}/${GOBLIN_MAX_HP}</span>`;
+  }
+  scorecardText.textContent = saved.scorecard;
+}
+
+// =====================
+// INIT
+// =====================
+
+function init() {
+  // Date display
+  document.getElementById('date-display').textContent = formatDate().toUpperCase();
+
+  // Check for saved game
+  const saved = loadSave();
+  if (saved && saved.gameOver) {
+    showSavedResult(saved);
+    return;
+  }
+
+  // Generate goblin
+  const seed = getDateSeed();
+  state.goblin = generateGoblin(seed);
+  document.getElementById('goblin-name').textContent = state.goblin.name;
+
+  // Weapon buttons
+  document.querySelectorAll('.attack-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (state.gameOver) return;
+      const type = btn.dataset.type;
+      const value = btn.dataset.value;
+
+      // Deselect others of same type
+      document.querySelectorAll(`.attack-btn[data-type="${type}"]`).forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+
+      if (type === 'weapon') state.selectedWeapon = value;
+      else state.selectedElement = value;
+
+      updateStrikeBtn();
+    });
+  });
+
+  document.getElementById('strike-btn').addEventListener('click', doAttack);
+  document.getElementById('crystal-ball-btn').addEventListener('click', consultCrystalBall);
+
+  document.getElementById('copy-btn').addEventListener('click', () => {
+    const text = document.getElementById('scorecard-text').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copy-btn');
+      btn.textContent = '✅ COPIED!';
+      setTimeout(() => btn.textContent = '📋 COPY SCORECARD', 2000);
+    });
+  });
+}
+
+init();
+</script>
+
+</body>
+</html>
