@@ -94,7 +94,7 @@ letter-spacing: 4px;
 
 #subtitle {
 font-size: 10px;
-color: var(–dim-green);
+color: #00cc33;
 margin-top: 4px;
 letter-spacing: 2px;
 }
@@ -114,10 +114,10 @@ content: ‘[ ENEMY ]’;
 position: absolute;
 top: -9px;
 left: 10px;
-background: var(–bg);
+background: #030f06;
 padding: 0 6px;
 font-size: 10px;
-color: var(–dim-green);
+color: #00cc33;
 letter-spacing: 2px;
 }
 
@@ -135,7 +135,7 @@ line-height: 1.6;
 font-family: ‘Share Tech Mono’, monospace;
 font-size: 11px;
 line-height: 1.4;
-color: var(–dim-green);
+color: #00cc33;
 text-align: center;
 white-space: pre;
 margin-bottom: 10px;
@@ -158,7 +158,7 @@ font-size: 11px;
 
 .hp-label {
 width: 70px;
-color: var(–dim-green);
+color: #00cc33;
 letter-spacing: 1px;
 flex-shrink: 0;
 }
@@ -218,10 +218,10 @@ content: ‘[ BATTLE LOG ]’;
 position: absolute;
 top: -9px;
 left: 10px;
-background: var(–bg);
+background: #030f06;
 padding: 0 6px;
 font-size: 10px;
-color: var(–dim-green);
+color: #00cc33;
 letter-spacing: 2px;
 }
 
@@ -241,21 +241,21 @@ scroll-behavior: smooth;
 .log-entry { margin-bottom: 8px; }
 
 .log-turn {
-color: var(–dim-green);
+color: #00cc33;
 font-size: 10px;
 letter-spacing: 1px;
 }
 
-.log-attack { color: var(–cyan); }
-.log-very-effective { color: var(–yellow); text-shadow: 0 0 6px var(–yellow); }
-.log-effective { color: var(–green); }
-.log-ineffective { color: #444; }
-.log-goblin-hit { color: var(–red); }
-.log-hint { color: var(–purple); }
-.log-system { color: var(–dim-green); font-style: italic; }
+.log-attack { color: #00ffff; }
+.log-very-effective { color: #ffff00; text-shadow: 0 0 6px #ffff00; }
+.log-effective { color: #00ff41; }
+.log-ineffective { color: #667766; }
+.log-goblin-hit { color: #ff5555; }
+.log-hint { color: #dd88ff; }
+.log-system { color: #00cc33; font-style: italic; }
 
 .log-empty {
-color: #333;
+color: #336633;
 font-size: 11px;
 padding: 8px 0;
 text-align: center;
@@ -276,10 +276,10 @@ content: ‘[ ATTACK ]’;
 position: absolute;
 top: -9px;
 left: 10px;
-background: var(–bg);
+background: #030f06;
 padding: 0 6px;
 font-size: 10px;
-color: var(–dim-green);
+color: #00cc33;
 letter-spacing: 2px;
 }
 
@@ -289,7 +289,7 @@ margin-bottom: 12px;
 
 .attack-group-label {
 font-size: 10px;
-color: var(–dim-green);
+color: #00cc33;
 letter-spacing: 2px;
 margin-bottom: 8px;
 }
@@ -304,8 +304,8 @@ flex-wrap: wrap;
 flex: 1;
 min-width: 70px;
 padding: 8px 4px;
-background: #001a08;
-border: 2px solid #00bb30;
+background: #0a2a12;
+border: 2px solid #00ff41;
 color: #00ff41;
 font-family: ‘Share Tech Mono’, monospace;
 font-size: 11px;
@@ -323,14 +323,14 @@ appearance: none;
 
 .attack-btn:hover {
 border-color: #00ff41;
-background: #002a10;
+background: #0f3a1a;
 }
 
 .attack-btn.selected {
 background: #00ff41 !important;
 color: #000000 !important;
 border-color: #00ff41 !important;
-box-shadow: 0 0 12px #00ff41, inset 0 0 4px rgba(255,255,255,0.2) !important;
+box-shadow: 0 0 14px #00ff41, inset 0 0 4px rgba(255,255,255,0.2) !important;
 font-weight: bold;
 }
 
@@ -344,13 +344,14 @@ margin-bottom: 4px;
 display: block;
 font-size: 9px;
 letter-spacing: 1px;
+color: inherit;
 }
 
 /* Element colors when selected */
-.attack-btn.selected.fire { background: #ff8800 !important; border-color: #ff8800 !important; box-shadow: 0 0 12px #ff8800 !important; color: #000 !important; }
-.attack-btn.selected.ice { background: #00ffff !important; border-color: #00ffff !important; box-shadow: 0 0 12px #00ffff !important; color: #000 !important; }
-.attack-btn.selected.electric { background: #ffff00 !important; border-color: #ffff00 !important; box-shadow: 0 0 12px #ffff00 !important; color: #000 !important; }
-.attack-btn.selected.physical { background: #bbbbbb !important; border-color: #bbbbbb !important; box-shadow: 0 0 12px #bbbbbb !important; color: #000 !important; }
+.attack-btn.selected.fire    { background: #ff8800 !important; border-color: #ff8800 !important; box-shadow: 0 0 14px #ff8800 !important; color: #000 !important; }
+.attack-btn.selected.ice     { background: #00ffff !important; border-color: #00ffff !important; box-shadow: 0 0 14px #00ffff !important; color: #000 !important; }
+.attack-btn.selected.electric{ background: #ffff00 !important; border-color: #ffff00 !important; box-shadow: 0 0 14px #ffff00 !important; color: #000 !important; }
+.attack-btn.selected.physical{ background: #ffffff !important; border-color: #ffffff !important; box-shadow: 0 0 14px #ffffff !important; color: #000 !important; }
 
 /* STRIKE button */
 #strike-btn {
@@ -500,16 +501,19 @@ to { opacity: 1; transform: translateY(0); }
 
 #date-display {
 font-size: 9px;
-color: #225522;
+color: #33aa55;
 letter-spacing: 2px;
 margin-top: 4px;
 }
 
 #disclaimer {
 font-size: 9px;
-color: #1a3d1a;
+color: #336633;
 letter-spacing: 1px;
-margin-top: 3px;
+margin-top: 20px;
+margin-bottom: 10px;
+text-align: center;
+width: 100%;
 }
 </style>
 
@@ -521,7 +525,6 @@ margin-top: 3px;
     <div id="title">SLAYDLE</div>
     <div id="subtitle">DAILY GOBLIN BATTLE</div>
     <div id="date-display"></div>
-    <div id="disclaimer">⚠ vibecoded — use at your own risk ⚠</div>
   </div>
 
   <div id="goblin-card">
@@ -604,6 +607,7 @@ margin-top: 3px;
     <div id="scorecard-text"></div>
     <button id="copy-btn">📋 COPY SCORECARD</button>
   </div>
+  <div id="disclaimer">⚠ vibecoded — use at your own risk ⚠</div>
 
 </div>
 
