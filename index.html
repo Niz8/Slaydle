@@ -5,8 +5,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SLAYDLE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Press+Start+2P&display=swap');
 
 :root {
 –green: #00ff41;
@@ -23,6 +25,10 @@
 }
 
 - { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+background: #030f06;
+}
 
 body {
 background: var(–bg);
@@ -298,9 +304,9 @@ flex-wrap: wrap;
 flex: 1;
 min-width: 70px;
 padding: 8px 4px;
-background: var(–dark-green);
-border: 1px solid var(–dim-green);
-color: var(–green);
+background: #001a08;
+border: 2px solid #00bb30;
+color: #00ff41;
 font-family: ‘Share Tech Mono’, monospace;
 font-size: 11px;
 cursor: pointer;
@@ -310,25 +316,28 @@ transition: all 0.1s;
 position: relative;
 outline: none;
 -webkit-tap-highlight-color: transparent;
+border-radius: 0;
+-webkit-appearance: none;
+appearance: none;
 }
 
 .attack-btn:hover {
-background: var(–dark-green);
-border-color: var(–green);
-color: var(–green);
+border-color: #00ff41;
+background: #002a10;
 }
 
 .attack-btn.selected {
-background: var(–green);
-color: var(–black);
-border-color: var(–green);
-box-shadow: 0 0 8px var(–green);
+background: #00ff41 !important;
+color: #000000 !important;
+border-color: #00ff41 !important;
+box-shadow: 0 0 12px #00ff41, inset 0 0 4px rgba(255,255,255,0.2) !important;
+font-weight: bold;
 }
 
 .attack-btn .btn-icon {
 display: block;
-font-size: 16px;
-margin-bottom: 3px;
+font-size: 18px;
+margin-bottom: 4px;
 }
 
 .attack-btn .btn-label {
@@ -338,10 +347,10 @@ letter-spacing: 1px;
 }
 
 /* Element colors when selected */
-.attack-btn.selected.fire { background: var(–orange); border-color: var(–orange); box-shadow: 0 0 8px var(–orange); }
-.attack-btn.selected.ice { background: var(–cyan); border-color: var(–cyan); box-shadow: 0 0 8px var(–cyan); color: #000; }
-.attack-btn.selected.electric { background: var(–yellow); border-color: var(–yellow); box-shadow: 0 0 8px var(–yellow); color: #000; }
-.attack-btn.selected.physical { background: #aaa; border-color: #aaa; box-shadow: 0 0 8px #aaa; color: #000; }
+.attack-btn.selected.fire { background: #ff8800 !important; border-color: #ff8800 !important; box-shadow: 0 0 12px #ff8800 !important; color: #000 !important; }
+.attack-btn.selected.ice { background: #00ffff !important; border-color: #00ffff !important; box-shadow: 0 0 12px #00ffff !important; color: #000 !important; }
+.attack-btn.selected.electric { background: #ffff00 !important; border-color: #ffff00 !important; box-shadow: 0 0 12px #ffff00 !important; color: #000 !important; }
+.attack-btn.selected.physical { background: #bbbbbb !important; border-color: #bbbbbb !important; box-shadow: 0 0 12px #bbbbbb !important; color: #000 !important; }
 
 /* STRIKE button */
 #strike-btn {
@@ -495,6 +504,13 @@ color: #225522;
 letter-spacing: 2px;
 margin-top: 4px;
 }
+
+#disclaimer {
+font-size: 9px;
+color: #1a3d1a;
+letter-spacing: 1px;
+margin-top: 3px;
+}
 </style>
 
 </head>
@@ -504,7 +520,8 @@ margin-top: 4px;
   <div id="header">
     <div id="title">SLAYDLE</div>
     <div id="subtitle">DAILY GOBLIN BATTLE</div>
-    <div id="date-display" id="date-display"></div>
+    <div id="date-display"></div>
+    <div id="disclaimer">⚠ vibecoded — use at your own risk ⚠</div>
   </div>
 
   <div id="goblin-card">
@@ -905,7 +922,7 @@ function buildScorecard(victory) {
     card += `Turn ${i+1}: ${effectivenessEmoji[atk.effectiveness]}\n`;
   });
 
-  card += '\nPlay at: slaydle.github.io';
+  card += '\nPlay at: https://niz8.github.io/Slaydle/';
   return card;
 }
 
