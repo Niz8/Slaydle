@@ -614,7 +614,13 @@ const GOBLIN_FIRST_NAMES = [
   'Glorbo','Fleebo','Snurk','Grix','Moog','Zibble','Krunt','Wobble',
   'Snot','Grubble','Fizz','Dork','Splot','Wumph','Gurgle','Blig',
   'Plonk','Snivel','Twerp','Grob','Muzzy','Flub','Skronk','Vex',
-  'Zorp','Quibble','Snaggle','Droob','Chuntle','Flib'
+  'Zorp','Quibble','Snaggle','Droob','Chuntle','Flib',
+  'Nubble','Grank','Skeebo','Wrix','Plonko','Dribb','Fumble','Gloob',
+  'Snorkel','Krubb','Bweep','Twonk','Grimp','Slurp','Blort','Quog',
+  'Splonk','Nurgle','Vimble','Zook','Skrag','Mobbe','Dweeb','Grint',
+  'Snorb','Flonk','Blibble','Krix','Prunk','Snig','Womp','Glurb',
+  'Skibble','Norf','Tweeb','Grobble','Splug','Durk','Fweep','Crungle',
+  'Blonk','Nurb','Skwee','Gribb','Wumble','Zonk','Droop','Krimble'
 ];
 
 // Adjectives that hint at weakness
@@ -642,7 +648,12 @@ const FLAVOR_ADJECTIVES = [
 // =====================
 
 function seededRng(seed) {
+  // Hash the seed first so adjacent dates scatter widely
   let s = seed;
+  s = ((s >> 16) ^ s) * 0x45d9f3b | 0;
+  s = ((s >> 16) ^ s) * 0x45d9f3b | 0;
+  s = (s >> 16) ^ s;
+  if (s === 0) s = 1;
   return function() {
     s = (s * 1664525 + 1013904223) & 0xffffffff;
     return (s >>> 0) / 0xffffffff;
@@ -1013,6 +1024,16 @@ function init() {
   // Date display
   document.getElementById('date-display').textContent = formatDate().toUpperCase();
 
+  // Copy button — always attach regardless of game state
+  document.getElementById('copy-btn').addEventListener('click', () => {
+    const text = document.getElementById('scorecard-text').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copy-btn');
+      btn.textContent = '✅ COPIED!';
+      setTimeout(() => btn.textContent = '📋 COPY SCORECARD', 2000);
+    });
+  });
+
   // Check for saved game
   const saved = loadSave();
   if (saved && saved.gameOver) {
@@ -1045,15 +1066,6 @@ function init() {
 
   document.getElementById('strike-btn').addEventListener('click', doAttack);
   document.getElementById('crystal-ball-btn').addEventListener('click', consultCrystalBall);
-
-  document.getElementById('copy-btn').addEventListener('click', () => {
-    const text = document.getElementById('scorecard-text').textContent;
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = document.getElementById('copy-btn');
-      btn.textContent = '✅ COPIED!';
-      setTimeout(() => btn.textContent = '📋 COPY SCORECARD', 2000);
-    });
-  });
 }
 
 init();
