@@ -35,6 +35,12 @@ Results are saved so you only play once per day. Share your scorecard with frien
 
 ## Patch Notes
 
+### v0.6.0
+
+- Crystal ball use now appears as a 🔮 on its own line in the shared scorecard, inserted at the position it was used
+- Added version number to bottom of page
+- Crystal ball state (used/turn) now saved to localStorage and restored correctly on revisit
+
 ### v0.5.0
 
 - Expanded goblin first name pool from 30 to 76 names
