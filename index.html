@@ -598,7 +598,7 @@ width: 100%;
     <div id="scorecard-text"></div>
     <button id="copy-btn">📋 COPY SCORECARD</button>
   </div>
-  <div id="disclaimer">⚠ vibecoded — use at your own risk ⚠</div>
+  <div id="disclaimer">⚠ vibecoded — use at your own risk ⚠ · v0.6.0</div>
 
 </div>
 
@@ -730,6 +730,7 @@ let state = {
   selectedWeapon: null,
   selectedElement: null,
   crystalUsed: false,
+  crystalTurn: -1,
   gameOver: false,
   victory: false,
   log: [],
@@ -873,6 +874,7 @@ function doAttack() {
 function consultCrystalBall() {
   if (state.crystalUsed || state.gameOver) return;
   state.crystalUsed = true;
+  state.crystalTurn = state.turn; // record after which turn it was used
 
   // Cost: 1 HP
   state.playerHp = Math.max(0, state.playerHp - 1);
@@ -926,7 +928,15 @@ function buildScorecard(victory) {
   card += '\n';
   state.attackLog.forEach((atk, i) => {
     card += `Turn ${i+1}: ${effectivenessEmoji[atk.effectiveness]}\n`;
+    // Insert crystal ball line after the turn it was used
+    if (state.crystalUsed && state.crystalTurn === i) {
+      card += `🔮\n`;
+    }
   });
+  // Crystal ball used before any turns
+  if (state.crystalUsed && state.crystalTurn === -1) {
+    card += `🔮\n`;
+  }
 
   card += '\nPlay at: https://niz8.github.io/Slaydle/';
   return card;
@@ -969,6 +979,8 @@ function endGame(victory) {
     goblinHp: state.goblin.hp,
     goblinName: state.goblin.name,
     attackLog: state.attackLog,
+    crystalUsed: state.crystalUsed,
+    crystalTurn: state.crystalTurn,
     scorecard
   });
 }
@@ -986,6 +998,8 @@ function showSavedResult(saved) {
   state.playerHp = saved.playerHp;
   state.gameOver = true;
   state.attackLog = saved.attackLog || [];
+  state.crystalUsed = saved.crystalUsed || false;
+  state.crystalTurn = saved.crystalTurn !== undefined ? saved.crystalTurn : -1;
 
   updateHpBars();
 
