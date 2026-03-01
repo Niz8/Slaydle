@@ -533,7 +533,7 @@ width: 100%;
       <div class="hp-row">
         <span class="hp-label">GOBLIN HP</span>
         <div class="hp-bar"><div class="hp-fill goblin" id="goblin-hp-bar" style="width:100%"></div></div>
-        <span class="hp-number goblin" id="goblin-hp-num">3/3</span>
+        <span class="hp-number goblin" id="goblin-hp-num">5/5</span>
       </div>
       <div class="hp-row">
         <span class="hp-label">YOUR HP</span>
@@ -589,7 +589,7 @@ width: 100%;
       </div>
     </div>
     <button id="strike-btn" disabled>⚔ STRIKE ⚔</button>
-    <button id="crystal-ball-btn">🔮 CONSULT CRYSTAL BALL (costs 1 HP)</button>
+    <button id="crystal-ball-btn">🔮 CONSULT CRYSTAL BALL (costs 2 HP)</button>
   </div>
 
   <div id="result-screen">
@@ -598,7 +598,7 @@ width: 100%;
     <div id="scorecard-text"></div>
     <button id="copy-btn">📋 COPY SCORECARD</button>
   </div>
-  <div id="disclaimer">⚠ vibecoded — use at your own risk ⚠ · v0.6.0</div>
+  <div id="disclaimer">⚠ vibecoded — use at your own risk ⚠ · v0.7.0</div>
 
 </div>
 
@@ -705,8 +705,8 @@ function generateGoblin(seed) {
     name: `${name} the ${adj}`,
     weakWeapon,
     weakElement,
-    maxHp: 3,
-    hp: 3
+    maxHp: 5,
+    hp: 5
   };
 }
 
@@ -715,7 +715,7 @@ function generateGoblin(seed) {
 // =====================
 
 const PLAYER_MAX_HP = 5;
-const GOBLIN_MAX_HP = 3;
+const GOBLIN_MAX_HP = 5;
 
 const DAMAGE = {
   veryEffective: 2,
@@ -873,29 +873,21 @@ function doAttack() {
 
 function consultCrystalBall() {
   if (state.crystalUsed || state.gameOver) return;
+  if (state.turn < 1) {
+    addLog(`<span class="log-hint">🔮 The crystal ball is cloudy... try attacking first.</span>`);
+    return;
+  }
   state.crystalUsed = true;
-  state.crystalTurn = state.turn; // record after which turn it was used
+  state.crystalTurn = state.turn;
 
-  // Cost: 1 HP
-  state.playerHp = Math.max(0, state.playerHp - 1);
+  // Cost: 2 HP
+  state.playerHp = Math.max(0, state.playerHp - 2);
   updateHpBars();
 
-  // Pick two random wrong options to reveal as ineffective
-  // Pool: all weapons + all elements except the correct ones
-  const wrongPool = [];
-  WEAPONS.forEach(w => { if (w !== state.goblin.weakWeapon) wrongPool.push({type:'weapon', val:w}); });
-  ELEMENTS.forEach(e => { if (e !== state.goblin.weakElement) wrongPool.push({type:'element', val:e}); });
-
-  // Shuffle and pick 2
-  for (let i = wrongPool.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [wrongPool[i], wrongPool[j]] = [wrongPool[j], wrongPool[i]];
-  }
-  const revealed = wrongPool.slice(0, 2);
-  const desc = revealed.map(r => `${r.val.toUpperCase()}`).join(' and ');
-
-  addLog(`<span class="log-hint">🔮 The crystal ball shimmers... "${desc} seem ineffective against this foe."</span>`);
-  addLog(`<span class="log-goblin-hit">${state.goblin.name.split(' ')[0]} senses weakness and strikes! (-1 HP)</span>`);
+  // Reveal the weak element outright
+  const weakEl = state.goblin.weakElement.toUpperCase();
+  addLog(`<span class="log-hint">🔮 The crystal ball blazes! The goblin fears <strong>${weakEl}</strong>!</span>`);
+  addLog(`<span class="log-goblin-hit">${state.goblin.name.split(' ')[0]} senses weakness and strikes! (-2 HP)</span>`);
 
   document.getElementById('crystal-ball-btn').disabled = true;
 
