@@ -25,7 +25,7 @@ Each turn, pick one weapon and one element and strike:
 
 After your attack, the goblin strikes back. Goblin damage escalates each turn (0 on turn 1, 1 on turn 2, 2 on turn 3…). Defeat the goblin before your HP hits zero.
 
-**Crystal Ball 🔮** — Once per game, consult the crystal ball to reveal two ineffective options. Costs 1 HP.
+**Crystal Ball 🔮** — Once per game, after your first attack, consult the crystal ball to reveal the goblin’s weak element. Costs 2 HP.
 
 The goblin’s name may hint at its weakness — or may just be flavor. Some days are harder than others.
 
@@ -34,6 +34,14 @@ Results are saved so you only play once per day. Share your scorecard with frien
 -----
 
 ## Patch Notes
+
+### v0.7.0
+
+- Goblin HP increased from 3 to 5 — pure effective runs now require 5 hits minimum, making the escalating damage genuinely dangerous and incentivizing players to find the very effective combo
+- Crystal ball now reveals the goblin’s weak element outright (“The goblin fears ICE!”)
+- Crystal ball cost raised from 1 HP to 2 HP
+- Crystal ball now locked until after turn 1 — must attempt at least one attack first
+- Version number added to footer (v0.6.0 → v0.7.0)
 
 ### v0.6.0
 
