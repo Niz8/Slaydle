@@ -533,7 +533,7 @@ width: 100%;
       <div class="hp-row">
         <span class="hp-label">GOBLIN HP</span>
         <div class="hp-bar"><div class="hp-fill goblin" id="goblin-hp-bar" style="width:100%"></div></div>
-        <span class="hp-number goblin" id="goblin-hp-num">5/5</span>
+        <span class="hp-number goblin" id="goblin-hp-num">4/4</span>
       </div>
       <div class="hp-row">
         <span class="hp-label">YOUR HP</span>
@@ -598,7 +598,7 @@ width: 100%;
     <div id="scorecard-text"></div>
     <button id="copy-btn">📋 COPY SCORECARD</button>
   </div>
-  <div id="disclaimer">⚠ vibecoded — use at your own risk ⚠ · v0.7.0</div>
+  <div id="disclaimer">⚠ vibecoded — use at your own risk ⚠ · v0.7.1</div>
 
 </div>
 
@@ -705,8 +705,8 @@ function generateGoblin(seed) {
     name: `${name} the ${adj}`,
     weakWeapon,
     weakElement,
-    maxHp: 5,
-    hp: 5
+    maxHp: 4,
+    hp: 4
   };
 }
 
@@ -715,7 +715,7 @@ function generateGoblin(seed) {
 // =====================
 
 const PLAYER_MAX_HP = 5;
-const GOBLIN_MAX_HP = 5;
+const GOBLIN_MAX_HP = 4;
 
 const DAMAGE = {
   veryEffective: 2,
@@ -920,13 +920,14 @@ function buildScorecard(victory) {
   card += '\n';
   state.attackLog.forEach((atk, i) => {
     card += `Turn ${i+1}: ${effectivenessEmoji[atk.effectiveness]}\n`;
-    // Insert crystal ball line after the turn it was used
-    if (state.crystalUsed && state.crystalTurn === i) {
+    // crystalTurn is state.turn at moment of use (1-indexed)
+    // so after turn N, insert after attackLog[N-1] i.e. i === crystalTurn - 1
+    if (state.crystalUsed && i === state.crystalTurn - 1) {
       card += `🔮\n`;
     }
   });
-  // Crystal ball used before any turns
-  if (state.crystalUsed && state.crystalTurn === -1) {
+  // Crystal ball used before any turns (shouldn't happen now but safe fallback)
+  if (state.crystalUsed && state.crystalTurn === 0) {
     card += `🔮\n`;
   }
 
