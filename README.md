@@ -35,6 +35,11 @@ Results are saved so you only play once per day. Share your scorecard with frien
 
 ## Patch Notes
 
+### v0.7.1
+
+- Goblin HP reduced from 5 to 4 — two very effective hits after a wasted turn 1 now kills exactly (2+2=4), making the crystal ball a viable winning strategy
+- Fixed crystal ball 🔮 appearing one turn too late in the shared scorecard
+
 ### v0.7.0
 
 - Goblin HP increased from 3 to 5 — pure effective runs now require 5 hits minimum, making the escalating damage genuinely dangerous and incentivizing players to find the very effective combo
