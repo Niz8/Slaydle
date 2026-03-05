@@ -35,6 +35,12 @@ Results are saved so you only play once per day. Share your scorecard with frien
 
 ## Patch Notes
 
+### v0.8.0
+
+- Added weapon break anti-spam mechanic — using the same weapon + element combo two turns in a row issues a warning; using it a third consecutive time breaks the weapon (0 damage to goblin, -2 HP to player), then goblin attacks as normal
+- Broken weapon turns show as 💔 in the shared scorecard
+- Warning is strictly last-turn vs current-turn only — alternating between two combos does not trigger it
+
 ### v0.7.1
 
 - Goblin HP reduced from 5 to 4 — two very effective hits after a wasted turn 1 now kills exactly (2+2=4), making the crystal ball a viable winning strategy
