@@ -524,15 +524,7 @@ width: 100%;
 
   <div id="goblin-card">
     <div id="goblin-name">???</div>
-    <div class="ascii-goblin" id="goblin-art">
-    .-"-.
-   /  ,  \
-  | (o)(o)|
-  |  \__/ |
-   \ /\/\ /
-    |    |
-   /|    |\
-  /_|____|_\</div>
+    <div class="ascii-goblin" id="goblin-art"></div>
     <div class="hp-section">
       <div class="hp-row">
         <span class="hp-label">GOBLIN HP</span>
@@ -602,7 +594,7 @@ width: 100%;
     <div id="scorecard-text"></div>
     <button id="copy-btn">📋 COPY SCORECARD</button>
   </div>
-  <div id="disclaimer">⚠ vibecoded — use at your own risk ⚠ · v0.8.0</div>
+  <div id="disclaimer">⚠ vibecoded — use at your own risk ⚠ · v0.9.0</div>
 
 </div>
 
@@ -624,28 +616,70 @@ const GOBLIN_FIRST_NAMES = [
   'Splonk','Nurgle','Vimble','Zook','Skrag','Mobbe','Dweeb','Grint',
   'Snorb','Flonk','Blibble','Krix','Prunk','Snig','Womp','Glurb',
   'Skibble','Norf','Tweeb','Grobble','Splug','Durk','Fweep','Crungle',
-  'Blonk','Nurb','Skwee','Gribb','Wumble','Zonk','Droop','Krimble'
+  'Blonk','Nurb','Skwee','Gribb','Wumble','Zonk','Droop','Krimble',
+  'Vixie','Nibble','Zelba','Frizzi','Glimba','Murple','Twixie','Snibble',
+  'Quelba','Drizzi','Yimble','Pixle','Snerba','Wobba','Flerbi'
 ];
 
 // Adjectives that hint at weakness
 const HINT_ADJECTIVES = {
   // Weapon hints
-  bow:    ['cowardly','skittish','distant','fleeing','dodgy','nimble'],
-  sword:  ['armored','shielded','defensive','guarded','plated','scaly'],
-  club:   ['bony','hollow','brittle','fragile','cracked','spindly'],
+  bow:      ['cowardly','skittish','distant','fleeing','dodgy','nimble','lanky','gangly','spindly','rangy'],
+  sword:    ['armored','shielded','defensive','guarded','plated','scaly','ironclad','steely','thick-skinned','crusty'],
+  club:     ['bony','hollow','brittle','fragile','cracked','spindly','glassy','rickety','papery','frail'],
   // Element hints
-  fire:   ['flammable','frosty','icy','frozen','chilly','wintry'],  // fire beats ice-themed (ironic) -- actually fire beats fire-weak
-  ice:    ['sweating','feverish','volcanic','scorching','ashen','smoldering'],
-  electric:['rubbery','grounded','static','sparking','twitching','magnetic'],
-  physical:['squishy','doughy','pudgy','bloated','mushy','gelatinous'],
+  fire:     ['flammable','waxy','oily','tarry','resinous','combustible','parched','tindery','dried-out','crackly'],
+  ice:      ['sweating','feverish','volcanic','scorching','ashen','smoldering','steaming','sweltering','blistering','sizzling'],
+  electric: ['rubbery','grounded','static','sparking','twitching','magnetic','insulated','dampened','sodden','boggy'],
+  physical: ['squishy','doughy','pudgy','bloated','mushy','gelatinous','jiggly','wobbly','squelchy','pillowy'],
 };
 
 // Flavor-only adjectives (no hint)
 const FLAVOR_ADJECTIVES = [
   'stinky','smelly','grumpy','sulky','whiny','rude','nasty','soggy',
   'crusty','gloomy','ornery','dim','dopey','surly','greasy','mangy',
-  'scruffy','ratty','lumpy','frumpy'
+  'scruffy','ratty','lumpy','frumpy','pungent','scowling','brooding',
+  'muttering','shifty','sniveling','wretched','bedraggled','mouldy','rank'
 ];
+
+// =====================
+// ASCII ART VARIANTS
+// =====================
+
+const GOBLIN_ART = {
+  A: `  .-"-.
+ /  ,  \\
+| (o)(o)|
+|  \\__/ |
+ \\ /\\/\\ /
+  |    |
+ /|    |\\
+/_|____|_\\`,
+  B: `  .-"-.
+ /  ,  \\
+| (>)(<)|
+|  \\__/ |
+ \\ /\\/\\ /
+\\-|    |-/
+ /|    |\\
+/_|____|_\\`,
+  C: `  .-"-.
+ /  ,  \\
+| (O)(O)|
+|  \\__/ |
+ \\ /\\/\\ /
+  |    |-<
+ /|   /|\\
+/_|____|_\\`
+};
+
+// ABCABCB pattern — 7 day cycle
+const ART_ROTATION = ['A','B','C','A','B','C','B'];
+
+function getGoblinArt() {
+  const dow = new Date().getDay(); // 0=Sun, 1=Mon ... 6=Sat
+  return GOBLIN_ART[ART_ROTATION[dow]];
+}
 
 // =====================
 // SEEDED RNG
@@ -687,13 +721,13 @@ function generateGoblin(seed) {
   const weakWeapon = pick(WEAPONS, rng);
   const weakElement = pick(ELEMENTS, rng);
 
-  // Decide if adjective hints at weakness (60% chance one axis hints)
+  // Decide if adjective hints at weakness (75% chance one axis hints)
   const hintRoll = rng();
   let adjective;
-  if (hintRoll < 0.3) {
+  if (hintRoll < 0.375) {
     // Hint at weapon weakness
     adjective = pick(HINT_ADJECTIVES[weakWeapon], rng);
-  } else if (hintRoll < 0.6) {
+  } else if (hintRoll < 0.75) {
     // Hint at element weakness
     adjective = pick(HINT_ADJECTIVES[weakElement], rng);
   } else {
@@ -1046,6 +1080,7 @@ function endGame(victory) {
 
 function showSavedResult(saved) {
   document.getElementById('goblin-name').textContent = saved.goblinName;
+  document.getElementById('goblin-art').textContent = getGoblinArt();
 
   // Rebuild state enough for display
   state.goblin = generateGoblin(getDateSeed());
@@ -1092,6 +1127,7 @@ function showSavedResult(saved) {
 function init() {
   // Date display
   document.getElementById('date-display').textContent = formatDate().toUpperCase();
+  document.getElementById('goblin-art').textContent = getGoblinArt();
 
   // Copy button — always attach regardless of game state
   document.getElementById('copy-btn').addEventListener('click', () => {
