@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — SLAYDLE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.ico">
+
+<!--
+Source - https://stackoverflow.com/a/73263779
+Posted by Anmol Agrawal
+Retrieved 2026-03-06, License - CC BY-SA 4.0
+-->
+
+<script>
+    window.onload = () => {
+        currentURL = window.location.href;
+        lowerCaseURL = currentURL.toLowerCase();
+        if (currentURL != lowerCaseURL) {
+            location.replace(lowerCaseURL);
+        }
+    };
+</script>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #030f06;
+    color: #00ff41;
+    font-family: 'Share Tech Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+  }
+
+  /* Scanlines */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    92% { opacity: 1; }
+    93% { opacity: 0.97; }
+    94% { opacity: 1; }
+  }
+  body { animation: flicker 8s infinite; }
+
+  #container {
+    text-align: center;
+    padding: 40px 24px;
+    max-width: 480px;
+    width: 100%;
+  }
+
+  #error-code {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 48px;
+    color: #ff5555;
+    text-shadow: 0 0 16px #ff5555;
+    letter-spacing: 6px;
+    margin-bottom: 24px;
+  }
+
+  .ascii-goblin {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #00cc33;
+    white-space: pre;
+    margin-bottom: 24px;
+  }
+
+  #message {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    color: #ffff00;
+    text-shadow: 0 0 8px #ffff00;
+    line-height: 2;
+    margin-bottom: 12px;
+  }
+
+  #submessage {
+    font-size: 11px;
+    color: #00cc33;
+    line-height: 1.8;
+    margin-bottom: 32px;
+  }
+
+  #home-btn {
+    display: inline-block;
+    padding: 14px 28px;
+    background: transparent;
+    border: 2px solid #00ff41;
+    color: #00ff41;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    text-decoration: none;
+    letter-spacing: 2px;
+    text-shadow: 0 0 8px #00ff41;
+    box-shadow: 0 0 8px rgba(0,255,65,0.2);
+    transition: all 0.15s;
+  }
+
+  #home-btn:hover {
+    background: #00ff41;
+    color: #000000;
+    box-shadow: 0 0 20px #00ff41;
+  }
+
+  #footer {
+    margin-top: 40px;
+    font-size: 9px;
+    color: #336633;
+    letter-spacing: 1px;
+  }
+</style>
+
+</head>
+<body>
+<div id="container">
+
+  <div id="error-code">404</div>
+
+  <div class="ascii-goblin">  .-"-.
+ /  ,  \
+| (O)(O)|
+|  \__/ |
+ \ /\/\ /
+  |    |-<
+ /|   /|\
+/_|____|_\</div>
+
+  <div id="message">PAGE NOT FOUND</div>
+  <div id="submessage">
+    The goblin ate this page.<br>
+    Or maybe it never existed.<br>
+    Either way, it's gone.
+  </div>
+
+<a href="https://niz8.github.io/Slaydle/" id="home-btn">⚔ RETURN TO BATTLE ⚔</a>
+
+  <div id="footer">⚠ vibecoded — use at your own risk ⚠</div>
+
+</div>
+</body>
+</html>
