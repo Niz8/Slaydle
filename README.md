@@ -35,6 +35,14 @@ Results are saved so you only play once per day. Share your scorecard with frien
 
 ## Patch Notes
 
+### v0.9.0
+
+- Added 15 feminine-leaning goblin names to the pool (Vixie, Nibble, Zelba, Frizzi, Glimba, Murple, Twixie, Snibble, Quelba, Drizzi, Yimble, Pixle, Snerba, Wobba, Flerbi)
+- Expanded hint adjective pools from 6 to 10 per category across all weapons and elements
+- Expanded flavor adjective pool from 20 to 30 entries
+- Bumped hint probability from 60% to 75% — more days will have a meaningful name hint
+- Added three ASCII goblin art variants (A: neutral, B: angry `(>)(<)` arms out, C: crazed `(O)(O)` arrow-hit chaos) on an ABCABCB 7-day weekly rotation
+
 ### v0.8.0
 
 - Added weapon break anti-spam mechanic — using the same weapon + element combo two turns in a row issues a warning; using it a third consecutive time breaks the weapon (0 damage to goblin, -2 HP to player), then goblin attacks as normal
