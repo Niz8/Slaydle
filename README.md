@@ -35,6 +35,15 @@ Results are saved so you only play once per day. Share your scorecard with frien
 
 ## Patch Notes
 
+### v0.9.2
+
+- Crystal ball cost reduced from 2 HP to 1 HP — combined with the free goblin hit on use it still stings, but no longer feels like a punishment for using a core mechanic
+
+### v0.9.1
+
+- Lowercased all hardcoded URLs from `/Slaydle/` to `/slaydle/` following repo rename
+- Added root domain `404.html` in `niz8.github.io` repo to catch uppercase URL traffic and redirect silently
+
 ### v0.9.0
 
 - Added 15 feminine-leaning goblin names to the pool (Vixie, Nibble, Zelba, Frizzi, Glimba, Murple, Twixie, Snibble, Quelba, Drizzi, Yimble, Pixle, Snerba, Wobba, Flerbi)
