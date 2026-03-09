@@ -585,7 +585,7 @@ width: 100%;
       </div>
     </div>
     <button id="strike-btn" disabled>⚔ STRIKE ⚔</button>
-    <button id="crystal-ball-btn">🔮 CONSULT CRYSTAL BALL (costs 2 HP)</button>
+    <button id="crystal-ball-btn">🔮 CONSULT CRYSTAL BALL (costs 1 HP)</button>
   </div>
 
   <div id="result-screen">
@@ -594,7 +594,7 @@ width: 100%;
     <div id="scorecard-text"></div>
     <button id="copy-btn">📋 COPY SCORECARD</button>
   </div>
-  <div id="disclaimer">⚠ vibecoded — use at your own risk ⚠ · v0.9.1</div>
+  <div id="disclaimer">⚠ vibecoded — use at your own risk ⚠ · v0.9.2</div>
 
 </div>
 
@@ -975,14 +975,14 @@ function consultCrystalBall() {
   state.crystalUsed = true;
   state.crystalTurn = state.turn;
 
-  // Cost: 2 HP
-  state.playerHp = Math.max(0, state.playerHp - 2);
+  // Cost: 1 HP
+  state.playerHp = Math.max(0, state.playerHp - 1);
   updateHpBars();
 
   // Reveal the weak element outright
   const weakEl = state.goblin.weakElement.toUpperCase();
   addLog(`<span class="log-hint">🔮 The crystal ball blazes! The goblin fears <strong>${weakEl}</strong>!</span>`);
-  addLog(`<span class="log-goblin-hit">${state.goblin.name.split(' ')[0]} senses weakness and strikes! (-2 HP)</span>`);
+  addLog(`<span class="log-goblin-hit">${state.goblin.name.split(' ')[0]} senses weakness and strikes! (-1 HP)</span>`);
 
   document.getElementById('crystal-ball-btn').disabled = true;
 
